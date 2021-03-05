@@ -4,7 +4,7 @@ This package provides user-friendly functions for reading HDF5 file content into
 
 ## Installation
 
-You can install the Real Python Feed Reader from [PyPI](insert_link_to_pypi):
+You can install the Moberg Analytics HDF5 package from [PyPI](insert_link_to_pypi):
 
     pip install moberg-hdf5
     
