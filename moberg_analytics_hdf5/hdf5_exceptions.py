@@ -1,4 +1,4 @@
-# hdf5_api exception classes
+# moberg_hdf5 exception classes
 
 class ArgumentError(Exception):
     """

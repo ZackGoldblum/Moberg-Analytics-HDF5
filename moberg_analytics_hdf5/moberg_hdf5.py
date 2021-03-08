@@ -2,7 +2,7 @@ import h5py
 import numpy as np
 import pandas as pd
 import ntpath
-from upload_portal.utils import hdf5_api_exceptions
+import hdf5_exceptions
 
 
 class HDF5Helper:
@@ -10,7 +10,7 @@ class HDF5Helper:
     DESCRIPTION
     -----------
     This class contains methods for argument, group, dataset, and duplicate checks as well as other 
-    methods that add functionality to HDF5Import and HDF5Convert.
+    methods that add functionality to HDF5Content and HDF5Components.
     """
 
 
@@ -40,7 +40,7 @@ class HDF5Helper:
 
         if group_name not in group_names_list:
             valid_group_name = False
-            raise hdf5_api_exceptions.GroupNameError(group_name=group_name)
+            raise hdf5_exceptions.GroupNameError(group_name=group_name)
         else:
             valid_group_name = True
 
@@ -96,7 +96,7 @@ class HDF5Helper:
 
         if dataset_name not in dataset_names_list:
             valid_dataset_name = False
-            raise hdf5_api_exceptions.DatasetNameError(dataset_name=dataset_name)
+            raise hdf5_exceptions.DatasetNameError(dataset_name=dataset_name)
         else:
             valid_dataset_name = True
 
@@ -120,7 +120,9 @@ class HDF5Helper:
         False
         """
 
-        if dataset_name in self.dup_dataset_names_list:  # if duplicate dataset name
+        dup_dataset_names_list = self.get_dup_dataset_names()  # list of all duplicate dataset names
+
+        if dataset_name in dup_dataset_names_list:  # if duplicate dataset name
             return True
         else:
             return False
@@ -227,9 +229,9 @@ class HDF5Helper:
         # the first arg in arg_list is always self, so the slice taken from [1:] 
         # total number of args that are not None
         if sum(arg is not None for arg in arg_list[1:]) == 0:  # if zero arguments are passed
-            raise hdf5_api_exceptions.ArgumentError(error_message='Arguments are required for this function.')
+            raise hdf5_exceptions.ArgumentError(error_message='Arguments are required for this function.')
         elif sum(arg is not None for arg in arg_list[1:]) > req_num_args:  # if more than req_num_args number of args are passed
-            raise hdf5_api_exceptions.ArgumentError(error_message='Too many or invalid arguments were passed to this function.')
+            raise hdf5_exceptions.ArgumentError(error_message='Too many or invalid arguments were passed to this function.')
 
     def check_path(self, path_list, path_to_check):
         """
@@ -254,17 +256,17 @@ class HDF5Helper:
 
         if path_to_check not in path_list:
             valid_path = False
-            raise hdf5_api_exceptions.PathError(path=path_to_check)
+            raise hdf5_exceptions.PathError(path=path_to_check)
         else:
             valid_path = True
 
         return valid_path
 
-class HDF5Import(HDF5Helper):
+class HDF5Content(HDF5Helper):
     """
     DESCRIPTION
     -----------
-    This class contains methods that organize the contents of the HDF5 file into lists and dictionaries.
+    This class contains methods that organize the content of the HDF5 file into lists and dictionaries.
     
     PARAMETERS
     ----------
@@ -275,32 +277,24 @@ class HDF5Import(HDF5Helper):
     ----------
     hdf5file: HDF5 file
         user-selected HDF5 file
-    hdf5_filename: HDF5 file name
-        name of the HDF5 file
     all_group_names_dict: dict
         dictionary of all groups and their associated info
         group names are keys
+    all_dataset_names_dict: dict
+        dictionary of all datasets and their associated info
+        datasetset names are keys
     all_dataset_paths_dict: dict
         dictionary of all datasets and their associated info
         datasetset paths are keys
-    all_dataset_names_dict: dict
-        dictionary of all datasets and their associated info
-        dataset names are keys
-    dup_dataset_names_list: list
-        list of all duplicate dataset names in the HDF5 file
     """
 
     def __init__(self, hdf5_filepath):
         super()
         hdf5file = h5py.File(hdf5_filepath, "r")
         self.hdf5file = hdf5file  
-        self.hdf5_filename = self.get_hdf5_filename(hdf5_filepath=hdf5_filepath)
-        self.all_group_paths = self.get_all_group_paths()  
-        self.all_group_names = self.get_all_group_names()
-        self.all_group_names_dict = self.get_all_group_names_dict()  
+        self.all_group_names_dict = self.get_all_group_names_dict()
+        self.all_dataset_names_dict = self.get_all_dataset_names_dict()
         self.all_dataset_paths_dict = self.get_all_dataset_paths_dict()  
-        self.all_dataset_names_dict = self.get_all_dataset_names_dict() 
-        self.dup_dataset_names_list = self.get_dup_dataset_names()
 
 
     # ----------Group Functions----------
@@ -476,7 +470,7 @@ class HDF5Import(HDF5Helper):
         """
 
         try:
-            valid_path = self.check_path(path_list=self.all_group_paths, path_to_check=group_path)
+            valid_path = self.check_path(path_list=self.get_all_group_paths(), path_to_check=group_path)
             if valid_path:
                 subgroup_list = []
 
@@ -487,7 +481,7 @@ class HDF5Import(HDF5Helper):
 
                 return subgroup_list
         
-        except hdf5_api_exceptions.PathError as e:
+        except hdf5_exceptions.PathError as e:
             print(e)
 
 
@@ -648,11 +642,11 @@ class HDF5Import(HDF5Helper):
 
             return dataset_name_list
 
-        except hdf5_api_exceptions.ArgumentError as e:
+        except hdf5_exceptions.ArgumentError as e:
             print(e)
-        except hdf5_api_exceptions.GroupNameError as e2:
+        except hdf5_exceptions.GroupNameError as e2:
             print(e2)
-        except hdf5_api_exceptions.PathError as e3:
+        except hdf5_exceptions.PathError as e3:
             print(e3)
 
     def get_dup_dataset_names(self):
@@ -758,11 +752,11 @@ class HDF5Import(HDF5Helper):
 
             return hdf5_path
             
-        except hdf5_api_exceptions.ArgumentError as e:
+        except hdf5_exceptions.ArgumentError as e:
             print(e)
-        except hdf5_api_exceptions.GroupNameError as e2:
+        except hdf5_exceptions.GroupNameError as e2:
             print(e2)
-        except hdf5_api_exceptions.DatasetNameError as e3:
+        except hdf5_exceptions.DatasetNameError as e3:
             print(e3)
 
     def get_metadata(self, group_name=None, dataset_name=None, dataset_path=None):
@@ -811,13 +805,13 @@ class HDF5Import(HDF5Helper):
                 
             return metadata_dict   
 
-        except hdf5_api_exceptions.ArgumentError as e:
+        except hdf5_exceptions.ArgumentError as e:
             print(e)
-        except hdf5_api_exceptions.GroupNameError as e2:
+        except hdf5_exceptions.GroupNameError as e2:
             print(e2)
-        except hdf5_api_exceptions.DatasetNameError as e3:
+        except hdf5_exceptions.DatasetNameError as e3:
             print(e3)
-        except hdf5_api_exceptions.PathError as e4:
+        except hdf5_exceptions.PathError as e4:
             print(e4)
 
     def get_hdf5_filename(self, hdf5_filepath):
@@ -888,11 +882,11 @@ class HDF5Import(HDF5Helper):
         return split_path
 
 
-class HDF5Convert(HDF5Import):
+class HDF5Components(HDF5Content):
     """
     DESCRIPTION
     -----------
-    This class contains methods that return various aspects of the HDF5 file to the user.
+    This class contains methods that return various components of the HDF5 file to the user.
         Groups, datasets, dataset values, NumPy/Pandas matrices of dataset values, metadata, and structured dictionaries.
     
     PARAMETERS
@@ -902,19 +896,15 @@ class HDF5Convert(HDF5Import):
     
     ATTRIBUTES
     ----------
-    hdf5_obj: class object
-        instance of the HDF5Import class
-    hdf5file: HDF5 file
-        user-selected HDF5 file
     all_group_names_dict: dict
         dictionary of every group and its associated info
         group names are keys
+    all_dataset_names_dict: dict
+        dictionary of all datasets and their associated info
+        datasetset names are keys
     all_dataset_paths_dict: dict
         dictionary of all datasets and their associated info
         datasetset paths are keys
-    all_dataset_names_dict: dict
-        dictionary of all datasets and their associated info
-        dataset names are keys
     """
 
     def __init__(self, hdf5_filepath):
@@ -962,7 +952,7 @@ class HDF5Convert(HDF5Import):
 
                 return group_info_dict
 
-        except hdf5_api_exceptions.GroupNameError as e:
+        except hdf5_exceptions.GroupNameError as e:
             print(e)
 
     def get_group_obj(self, group_name):
@@ -989,7 +979,7 @@ class HDF5Convert(HDF5Import):
 
                 return group_obj
 
-        except hdf5_api_exceptions.GroupNameError as e:
+        except hdf5_exceptions.GroupNameError as e:
             print(e)
 
     # TODO: test how this handles two levels of subgroups
@@ -1034,7 +1024,7 @@ class HDF5Convert(HDF5Import):
                 
                 return group_dict
         
-        except hdf5_api_exceptions.GroupNameError as e:
+        except hdf5_exceptions.GroupNameError as e:
             print(e)
 
     def get_subgroup_dict(self, group_path):
@@ -1068,7 +1058,7 @@ class HDF5Convert(HDF5Import):
 
                 return subgroup_dict
 
-        except hdf5_api_exceptions.PathError as e:
+        except hdf5_exceptions.PathError as e:
             print(e)
 
     def get_parent_group_obj(self, group_name=None, dataset_name=None, dataset_path=None):
@@ -1121,13 +1111,13 @@ class HDF5Convert(HDF5Import):
                     parent_group_obj = dataset_obj.parent 
                     return parent_group_obj
 
-        except hdf5_api_exceptions.ArgumentError as e:
+        except hdf5_exceptions.ArgumentError as e:
             print(e)
-        except hdf5_api_exceptions.GroupNameError as e2:
+        except hdf5_exceptions.GroupNameError as e2:
             print(e2)
-        except hdf5_api_exceptions.DatasetNameError as e3:
+        except hdf5_exceptions.DatasetNameError as e3:
             print(e3)
-        except hdf5_api_exceptions.PathError as e4:
+        except hdf5_exceptions.PathError as e4:
             print(e4)
 
     def get_parent_group_path(self, group_name=None, dataset_name=None, dataset_path=None):
@@ -1180,13 +1170,13 @@ class HDF5Convert(HDF5Import):
                     parent_group_path = dataset_obj.parent.name
                     return parent_group_path
 
-        except hdf5_api_exceptions.ArgumentError as e:
+        except hdf5_exceptions.ArgumentError as e:
             print(e)
-        except hdf5_api_exceptions.GroupNameError as e2:
+        except hdf5_exceptions.GroupNameError as e2:
             print(e2)
-        except hdf5_api_exceptions.DatasetNameError as e3:
+        except hdf5_exceptions.DatasetNameError as e3:
             print(e3)
-        except hdf5_api_exceptions.PathError as e4:
+        except hdf5_exceptions.PathError as e4:
             print(e4)
 
     def get_parent_group_name(self, group_name=None, dataset_name=None, dataset_path=None):
@@ -1241,13 +1231,13 @@ class HDF5Convert(HDF5Import):
                     parent_group_name = all_group_objs_dict[parent_group_obj]["group_name"]
                     return parent_group_name
 
-        except hdf5_api_exceptions.ArgumentError as e:
+        except hdf5_exceptions.ArgumentError as e:
             print(e)
-        except hdf5_api_exceptions.GroupNameError as e2:
+        except hdf5_exceptions.GroupNameError as e2:
             print(e2)
-        except hdf5_api_exceptions.DatasetNameError as e3:
+        except hdf5_exceptions.DatasetNameError as e3:
             print(e3)
-        except hdf5_api_exceptions.PathError as e4:
+        except hdf5_exceptions.PathError as e4:
             print(e4)
 
     def get_eeg_matrix(self, group_name, matrix_type="pandas", num_points=None):
@@ -1276,7 +1266,7 @@ class HDF5Convert(HDF5Import):
             cns_eeg_group_list = ["Impedance", "NeonatalParams", "SampleSeries"]  # list of valid CNS EEG group names
 
             if group_name not in cns_eeg_group_list:  # if group_name is not in the list of valid CNS EEG group names
-                raise hdf5_api_exceptions.EEGGroupNameError(group_name=group_name)
+                raise hdf5_exceptions.EEGGroupNameError(group_name=group_name)
             else:
                 group_path = self.get_path(group_name=group_name)
 
@@ -1308,13 +1298,13 @@ class HDF5Convert(HDF5Import):
                             eeg_matrix[:, i] = self.hdf5file[group_path].get(channel_name)  # add values to the channel_name col
 
                 else:
-                    raise hdf5_api_exceptions.MatrixTypeError(matrix_type=matrix_type)
+                    raise hdf5_exceptions.MatrixTypeError(matrix_type=matrix_type)
 
                 return eeg_matrix
 
-        except hdf5_api_exceptions.EEGGroupNameError as e:
+        except hdf5_exceptions.EEGGroupNameError as e:
             print(e)
-        except hdf5_api_exceptions.MatrixTypeError as e2:
+        except hdf5_exceptions.MatrixTypeError as e2:
             print(e2)
 
 
@@ -1373,11 +1363,11 @@ class HDF5Convert(HDF5Import):
                     }
                     return dataset_info_dict
 
-        except hdf5_api_exceptions.ArgumentError as e:
+        except hdf5_exceptions.ArgumentError as e:
             print(e)
-        except hdf5_api_exceptions.DatasetNameError as e2:
+        except hdf5_exceptions.DatasetNameError as e2:
             print(e2)
-        except hdf5_api_exceptions.PathError as e3:
+        except hdf5_exceptions.PathError as e3:
             print(e3)
 
     def get_dataset_obj(self, dataset_name=None, dataset_path=None):  # returns the HDF5 dataset object
@@ -1417,11 +1407,11 @@ class HDF5Convert(HDF5Import):
                     dataset_obj = self.hdf5file.get(dataset_path)
                     return dataset_obj
 
-        except hdf5_api_exceptions.ArgumentError as e:
+        except hdf5_exceptions.ArgumentError as e:
             print(e)
-        except hdf5_api_exceptions.DatasetNameError as e2:
+        except hdf5_exceptions.DatasetNameError as e2:
             print(e2)
-        except hdf5_api_exceptions.PathError as e3:
+        except hdf5_exceptions.PathError as e3:
             print(e3)
 
     def get_dataset_dict(self, dataset_name=None, dataset_path=None):
@@ -1468,11 +1458,11 @@ class HDF5Convert(HDF5Import):
                     dataset_dict.update({"dataset": dataset})
                     return dataset_dict
 
-        except hdf5_api_exceptions.ArgumentError as e:
+        except hdf5_exceptions.ArgumentError as e:
             print(e)
-        except hdf5_api_exceptions.DatasetNameError as e2:
+        except hdf5_exceptions.DatasetNameError as e2:
             print(e2)
-        except hdf5_api_exceptions.PathError as e3:
+        except hdf5_exceptions.PathError as e3:
             print(e3)
 
     def get_column_names(self, dataset_name=None, dataset_path=None):
@@ -1519,11 +1509,11 @@ class HDF5Convert(HDF5Import):
                         column_names_list = []
                     return column_names_list
 
-        except hdf5_api_exceptions.ArgumentError as e:
+        except hdf5_exceptions.ArgumentError as e:
             print(e)
-        except hdf5_api_exceptions.DatasetNameError as e2:
+        except hdf5_exceptions.DatasetNameError as e2:
             print(e2)
-        except hdf5_api_exceptions.PathError as e3:
+        except hdf5_exceptions.PathError as e3:
             print(e3)
 
     def get_values(self, dataset_name=None, dataset_path=None, matrix_type="pandas"):
@@ -1566,7 +1556,7 @@ class HDF5Convert(HDF5Import):
                         dataset_values = np.array(dataset_obj)  # NumPy Array of dataset values
                         return dataset_values
                     else:
-                        raise hdf5_api_exceptions.MatrixTypeError(matrix_type=matrix_type)
+                        raise hdf5_exceptions.MatrixTypeError(matrix_type=matrix_type)
             elif dataset_path:  # if dataset_path passed in
                 valid_dataset_path = self.check_path(path_list=self.get_all_dataset_paths(), path_to_check=dataset_path)
                 if valid_dataset_path:
@@ -1582,12 +1572,12 @@ class HDF5Convert(HDF5Import):
                         dataset_values = np.array(dataset_obj)  # NumPy Array of dataset values
                         return dataset_values
                     else:
-                        raise hdf5_api_exceptions.MatrixTypeError(matrix_type=matrix_type)
+                        raise hdf5_exceptions.MatrixTypeError(matrix_type=matrix_type)
 
-        except hdf5_api_exceptions.DatasetNameError as e:
+        except hdf5_exceptions.DatasetNameError as e:
             print(e)
-        except hdf5_api_exceptions.PathError as e2:
+        except hdf5_exceptions.PathError as e2:
             print(e2)
-        except hdf5_api_exceptions.MatrixTypeError as e3:
+        except hdf5_exceptions.MatrixTypeError as e3:
             print(e3)
 
