@@ -20,7 +20,7 @@ setup(
     classifiers=[
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.9.0",
+        "Programming Language :: Python :: 3.9",
     ],
     #packages=["moberg-hdf5", "hdf5_exceptions"],  # incorrect - files, not packages (folders)
     #packages=find_packages(),
