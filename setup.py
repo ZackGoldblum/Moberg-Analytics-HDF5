@@ -8,7 +8,7 @@ HERE = pathlib.Path(__file__).parent
 README = (HERE / "README.md").read_text()
 
 setup(
-    name="moberg-analytics-hdf5",
+    name="Moberg-Analytics-HDF5",
     version="1.0.0",
     description="Moberg Analytics HDF5 Functions",
     long_description=README,
@@ -24,7 +24,7 @@ setup(
     ],
     #packages=["moberg-hdf5", "hdf5_exceptions"],  # incorrect - files, not packages (folders)
     #packages=find_packages(),
-    packages=["moberg-analytics-hdf5"],
+    packages=["moberg_analytics_hdf5"],
     include_package_data=True,
     install_requires=["h5py", "numpy", "pandas", "ntpath"]
 )
