@@ -1,7 +1,7 @@
 import h5py
 import numpy as np
 import pandas as pd
-import ntpath
+import os
 import hdf5_exceptions
 
 
@@ -831,7 +831,7 @@ class HDF5Content(HDF5Helper):
             name of the HDF5 file
         """
 
-        hdf5_filename = ntpath.basename(hdf5_filepath)  # works on Windows and Linux
+        hdf5_filename = os.path.basename(hdf5_filepath)  # works on Windows and Linux
 
         return hdf5_filename
 
