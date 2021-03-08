@@ -1,0 +1,29 @@
+Metadata-Version: 2.1
+Name: Moberg-Analytics-HDF5
+Version: 1.0.0
+Summary: Moberg Analytics HDF5 Functions
+Home-page: https://github.com/Moberg-Analytics-Inc/Moberg-Analytics-HDF5
+Author: Moberg Analytics
+Author-email: dick@moberganalytics.com
+License: MIT
+Description: # Moberg Analytics HDF5 Functions
+        
+        This package provides user-friendly functions for reading HDF5 file content into Python. 
+        
+        ## Installation
+        
+        You can install the Moberg Analytics HDF5 package from [PyPI](insert_link_to_pypi):
+        
+            pip install moberg-analytics-hdf5
+            
+        This package was created using Python version 3.9.0.
+        
+        ## How to use
+        
+        Pass the path to the HDF5 file on your local filesystem...
+        
+Platform: UNKNOWN
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.9
+Description-Content-Type: text/markdown
