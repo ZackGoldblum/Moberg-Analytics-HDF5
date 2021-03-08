@@ -26,5 +26,5 @@ setup(
     #packages=find_packages(),
     packages=["moberg_analytics_hdf5"],
     include_package_data=True,
-    install_requires=["h5py", "numpy", "pandas", "os"]
+    install_requires=["h5py", "numpy", "pandas"]
 )
