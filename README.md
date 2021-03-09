@@ -1,6 +1,6 @@
 # Moberg Analytics HDF5 Functions
 
-This package provides user-friendly functions organized into Classes for reading HDF5 file content and components into Python. 
+This package provides user-friendly functions organized into Classes for reading [HDF5](https://www.hdfgroup.org/solutions/hdf5/) file content and components into Python. 
 
 ## Installation
 
