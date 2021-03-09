@@ -12,23 +12,21 @@ This package was created using Python version 3.9.0.
 
 ## How to use
 
-Import the package into Python:
+1 - Import the package into Python:
 	
 	from moberg_analytics_hdf5 import hdf5_tools
 	
-Choose your HDF5 file:
+2 - Choose your HDF5 file:
 
 	hdf5_filepath = r"path to the hdf5 file"
 	
-Instantiate the HDF5Content class:
-
-	cont_obj = hdf5_tools.HDF5Content(hdf5_filepath=hdf5_filepath)
-	
+3 - Instantiate the HDF5Content class:
 The HDF5Content class contains methods that organize the content of the HDF5 file into lists and dictionaries.
 
-Instantiate the HDF5Components class:
+	cont_obj = hdf5_tools.HDF5Content(hdf5_filepath=hdf5_filepath)
 
-	comp_obj = hdf5_tools.HDF5Components(hdf5_filepath=hdf5_filepath)
-
+4 - Instantiate the HDF5Components class:
 The HDF5Components class contains methods that return various components of the HDF5 file such as
 groups, datasets, dataset values, NumPy/Pandas matrices of dataset values, metadata, and structured dictionaries.
+
+	comp_obj = hdf5_tools.HDF5Components(hdf5_filepath=hdf5_filepath)
