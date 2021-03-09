@@ -22,12 +22,12 @@ This package was created using Python version 3.9.0.
 	
 3 - Instantiate the HDF5Content class, the HDF5Components class, and/or the HDF5Helper class:
 
-The HDF5Content class contains functions that organize the content of the HDF5 file into lists and dictionaries.
+**The HDF5Content class contains functions that organize the content of the HDF5 file into lists and dictionaries.
 
-The HDF5Components class contains functions that return various components of the HDF5 file such as
+**The HDF5Components class contains functions that return various components of the HDF5 file such as
 groups, datasets, dataset values, NumPy/Pandas matrices of dataset values, metadata attributes, and structured dictionaries.
 
-The HDF5Helper class contains functions for argument, group, dataset, and duplicate checks and adds additional functionality to the HDF5Content and HDF5Components classes.
+**The HDF5Helper class contains functions for argument, group, dataset, and duplicate checks and adds additional functionality to the HDF5Content and HDF5Components classes.
 
 	cont_obj = hdf5_tools.HDF5Content(hdf5_filepath=hdf5_filepath)
 	
