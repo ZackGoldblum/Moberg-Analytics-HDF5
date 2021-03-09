@@ -886,8 +886,8 @@ class HDF5Components(HDF5Content):
     """
     DESCRIPTION
     -----------
-    This class contains methods that return various components of the HDF5 file such as groups, 
-    datasets, dataset values, NumPy/Pandas matrices of dataset values, metadata, and structured dictionaries.
+    This class contains methods that return various components of the HDF5 file to the user.
+        Groups, datasets, dataset values, NumPy/Pandas matrices of dataset values, metadata, and structured dictionaries.
     
     PARAMETERS
     ----------
