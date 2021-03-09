@@ -33,4 +33,4 @@ groups, datasets, dataset values, NumPy/Pandas matrices of dataset values, metad
 
 	comp_obj = hdf5_tools.HDF5Components(hdf5_filepath=hdf5_filepath)
 	
-5 - Use the functions as detailed in the documentation found [here](insert_link_to_docs)
+5 - Use the functions as detailed in the documentation found [here](insert_link_to_docs).
