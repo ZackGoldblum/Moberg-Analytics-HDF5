@@ -35,4 +35,4 @@ groups, datasets, dataset values, NumPy/Pandas matrices of dataset values, metad
 	
 	helper_obj = hdf5_tools.HDF5Helper()
 	
-5 - Use the functions as detailed in the documentation found [here](insert_link_to_docs).
+4 - Use the functions as detailed in the documentation found [here](insert_link_to_docs).
