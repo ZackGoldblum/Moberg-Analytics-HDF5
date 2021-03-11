@@ -6,7 +6,7 @@ This package provides user-friendly functions organized into Classes for reading
 
 Install the Moberg-Analytics-HDF5 package from [PyPI](https://test.pypi.org/project/Moberg-Analytics-HDF5/):
 
-    pip install moberg_analytics_hdf5
+    pip install -i https://test.pypi.org/simple/ Moberg-Analytics-HDF5
     
 This package was created using Python version 3.9.0.
 
