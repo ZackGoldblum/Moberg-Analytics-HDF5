@@ -35,4 +35,8 @@ groups, datasets, dataset values, NumPy/Pandas matrices of dataset values, metad
 	
 	helper_obj = hdf5_tools.HDF5Helper()
 	
-4 - Use the functions as detailed in the documentation found [here](insert_link_to_docs).
+4 - Use the functions as detailed in the documentation below.
+
+## Documentation 
+
+The Moberg-Analytics-HDF5 documentation is found [here](https://moberg-analytics-inc.github.io/Moberg-Analytics-HDF5-Documentation/).
