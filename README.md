@@ -4,7 +4,7 @@ This package provides user-friendly functions organized into Classes for reading
 
 ## Installation
 
-Install the Moberg-Analytics-HDF5 package from [PyPI](insert_link_to_pypi):
+Install the Moberg-Analytics-HDF5 package from [PyPI](https://test.pypi.org/project/Moberg-Analytics-HDF5/):
 
     pip install moberg_analytics_hdf5
     
@@ -35,4 +35,8 @@ groups, datasets, dataset values, NumPy/Pandas matrices of dataset values, metad
 	
 	helper_obj = hdf5_tools.HDF5Helper()
 	
-4 - Use the functions as detailed in the documentation found [here](insert_link_to_docs).
+4 - Use the functions as detailed in the documentation below.
+
+## Documentation 
+
+The Moberg-Analytics-HDF5 documentation is located [here](https://moberg-analytics-inc.github.io/Moberg-Analytics-HDF5-Documentation/).
