@@ -39,4 +39,4 @@ groups, datasets, dataset values, NumPy/Pandas matrices of dataset values, metad
 
 ## Documentation 
 
-The Moberg-Analytics-HDF5 documentation is found [here](https://moberg-analytics-inc.github.io/Moberg-Analytics-HDF5-Documentation/).
+The Moberg-Analytics-HDF5 documentation is located [here](https://moberg-analytics-inc.github.io/Moberg-Analytics-HDF5-Documentation/).
