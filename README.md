@@ -29,11 +29,11 @@ groups, datasets, dataset values, NumPy/Pandas matrices of dataset values, metad
 
 -The HDF5Helper class contains functions for argument, group, dataset, and duplicate checks and adds additional functionality to the HDF5Content and HDF5Components classes.
 
-	cont_obj = hdf5_tools.HDF5Content(hdf5_filepath=hdf5_filepath)
+	hdf5_content = hdf5_tools.HDF5Content(hdf5_filepath=hdf5_filepath)
 	
-	comp_obj = hdf5_tools.HDF5Components(hdf5_filepath=hdf5_filepath)
+	hdf5_comps = hdf5_tools.HDF5Components(hdf5_filepath=hdf5_filepath)
 	
-	helper_obj = hdf5_tools.HDF5Helper()
+	hdf5_helper = hdf5_tools.HDF5Helper()
 	
 4 - Use the functions as detailed in the documentation below.
 
