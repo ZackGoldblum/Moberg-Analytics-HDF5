@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: Moberg-Analytics-HDF5
-Version: 1.0.0
+Version: 1.0.1
 Summary: Moberg Analytics HDF5 Functions
 Home-page: https://github.com/Moberg-Analytics-Inc/Moberg-Analytics-HDF5
 Author: Moberg Analytics
@@ -12,9 +12,9 @@ Description: # Moberg Analytics HDF5 Functions
         
         ## Installation
         
-        Install the Moberg-Analytics-HDF5 package from [PyPI](https://test.pypi.org/project/Moberg-Analytics-HDF5/):
+        Install the Moberg-Analytics-HDF5 package from [PyPI](https://pypi.org/project/Moberg-Analytics-HDF5/):
         
-            pip install -i https://test.pypi.org/simple/ Moberg-Analytics-HDF5
+            pip install Moberg-Analytics-HDF5
             
         This package was created using Python version 3.9.0.
         
