@@ -9,7 +9,7 @@ README = (HERE / "README.md").read_text()
 
 setup(
     name="Moberg-Analytics-HDF5",
-    version="1.0.5",
+    version="1.0.0",
     description="Moberg Analytics HDF5 Functions",
     long_description=README,
     long_description_content_type="text/markdown",
@@ -26,5 +26,5 @@ setup(
     #packages=find_packages(),
     packages=["moberg_analytics_hdf5"],
     include_package_data=True,
-    install_requires=["h5py", "numpy", "pandas"]
+    install_requires=["h5py", "numpy", "pandas", "ntpath"]
 )
