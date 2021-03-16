@@ -984,7 +984,6 @@ class HDF5Components(HDF5Content):
         except hdf5_exceptions.GroupNameError as e:
             print(e)
 
-    # TODO: test how this handles two levels of subgroups
     def get_group_dict(self, group_name):
         """
         DESCRIPTION
