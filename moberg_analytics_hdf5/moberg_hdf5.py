@@ -1,8 +1,8 @@
 import h5py
 import numpy as np
 import pandas as pd
-import os
-from . import hdf5_exceptions
+import ntpath
+import hdf5_exceptions
 
 
 class HDF5Helper:
@@ -304,7 +304,7 @@ class HDF5Content(HDF5Helper):
         """
         DESCRIPTION
         -----------
-        Returns a list of all group paths in the HDF5 file (including the Root group and subgroups).
+        Returns a list of all group paths in the HDF5 file (including the Root Group and subgroups).
         
         RETURNS
         -------
@@ -313,7 +313,7 @@ class HDF5Content(HDF5Helper):
         """
 
         all_group_paths_list = []
-        all_group_paths_list.append("/")  # add Root group to list
+        all_group_paths_list.append("/")  # add Root Group to list
 
         def visit_group(path):
             if isinstance(self.hdf5file[path], h5py._hl.group.Group):  # if group
@@ -327,7 +327,7 @@ class HDF5Content(HDF5Helper):
         """
         DESCRIPTION
         -----------
-        Returns a list of all group class objects in the HDF5 file (including the Root group and subgroups).
+        Returns a list of all group class objects in the HDF5 file (including the Root Group and subgroups).
         
         RETURNS
         -------
@@ -348,7 +348,7 @@ class HDF5Content(HDF5Helper):
         """
         DESCRIPTION
         -----------
-        Returns a list of all group names in the HDF5 file (including the Root group and subgroups).
+        Returns a list of all group names in the HDF5 file (including the Root Group and subgroups).
         
         RETURNS
         -------
@@ -362,7 +362,7 @@ class HDF5Content(HDF5Helper):
                 all_group_names_list.append(path.split("/")[-1])  # add group name to list
 
         self.hdf5file.visit(visit_group) # visit all objects in the HDF5 file
-        all_group_names_list.insert(0, "/")  # add Root group to start of list
+        all_group_names_list.insert(0, "/")  # add Root Group to start of list
 
         return all_group_names_list
 
@@ -370,7 +370,7 @@ class HDF5Content(HDF5Helper):
         """
         DESCRIPTION
         -----------
-        Returns a dictionary of all group names (including the Root group and subgroups) and their associated info from the HDF5 file.
+        Returns a dictionary of all group names (including the Root Group and subgroups) and their associated info from the HDF5 file.
             Key - group name
             Value - group info
         
@@ -423,7 +423,7 @@ class HDF5Content(HDF5Helper):
         """
         DESCRIPTION
         -----------
-        Returns a dictionary of all group objects (including the Root group and subgroups) and their group name from the HDF5 file.
+        Returns a dictionary of all group objects (including the Root Group and subgroups) and their group name from the HDF5 file.
             Key - group class object
             Value - group name
         
@@ -831,7 +831,7 @@ class HDF5Content(HDF5Helper):
             name of the HDF5 file
         """
 
-        hdf5_filename = os.path.basename(hdf5_filepath)  # works on Windows and Linux
+        hdf5_filename = ntpath.basename(hdf5_filepath)  # works on Windows and Linux
 
         return hdf5_filename
 
@@ -839,7 +839,7 @@ class HDF5Content(HDF5Helper):
         """
         DESCRIPTION
         -----------
-        Returns the group or dataset name from a HDF5 file path.
+        Returns the group or dataset name from the HDF5 file path.
 
         PARAMETERS
         ----------
@@ -876,8 +876,6 @@ class HDF5Content(HDF5Helper):
 
         if "/" in hdf5_path:  # if components in path
             split_path = hdf5_path.split("/")  # create list of components
-            if split_path[0] == "":
-                split_path = split_path[1:]
         else:  # if no components in path
             split_path = [hdf5_path]  # create list of the components
 
@@ -888,8 +886,8 @@ class HDF5Components(HDF5Content):
     """
     DESCRIPTION
     -----------
-    This class contains methods that return various components of the HDF5 file such as groups, 
-    datasets, dataset values, NumPy/Pandas matrices of dataset values, metadata, and structured dictionaries.
+    This class contains methods that return various components of the HDF5 file to the user.
+        Groups, datasets, dataset values, NumPy/Pandas matrices of dataset values, metadata, and structured dictionaries.
     
     PARAMETERS
     ----------
@@ -1093,7 +1091,7 @@ class HDF5Components(HDF5Content):
             if group_name:  # if group_name passed in
                 valid_group_name = self.check_group_name(group_names_list=self.get_all_group_names(), group_name=group_name)
                 if valid_group_name:
-                    if group_name != "/":  # if not the Root group
+                    if group_name != "/":  # if not the Root Group
                         group_obj = self.get_group_obj(group_name=group_name)
                         parent_group_obj = group_obj.parent  
                     else:
@@ -1152,7 +1150,7 @@ class HDF5Components(HDF5Content):
             if group_name:  # if group_name passed in
                 valid_group_name = self.check_group_name(group_names_list=self.get_all_group_names(), group_name=group_name)
                 if valid_group_name:
-                    if group_name != "/":  # if not the Root group
+                    if group_name != "/":  # if not the Root Group
                         group_obj = self.get_group_obj(group_name=group_name)
                         parent_group_path = group_obj.parent.name
                     else:
@@ -1213,11 +1211,11 @@ class HDF5Components(HDF5Content):
             if group_name:  # if group_name passed in
                 valid_group_name = self.check_group_name(group_names_list=self.get_all_group_names(), group_name=group_name)
                 if valid_group_name:
-                    if group_name != "/":  # if not the Root group
+                    if group_name != "/":  # if not the Root Group
                         parent_group_obj = self.get_parent_group_obj(group_name=group_name)
                         parent_group_name = all_group_objs_dict[parent_group_obj]["group_name"]
                     else:
-                        parent_group_name = None  # Root group "/" has no parent group name
+                        parent_group_name = None  # root group "/" has no parent group name
                 return parent_group_name
             elif dataset_name:  # if dataset_name passed in
                 valid_dataset_name = self.check_dataset_name(dataset_names_list=self.get_all_dataset_names(), dataset_name=dataset_name)
