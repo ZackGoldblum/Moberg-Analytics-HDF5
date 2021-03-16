@@ -1,10 +1,10 @@
 Metadata-Version: 2.1
 Name: Moberg-Analytics-HDF5
-Version: 1.0.6
+Version: 1.0.0
 Summary: Moberg Analytics HDF5 Functions
 Home-page: https://github.com/Moberg-Analytics-Inc/Moberg-Analytics-HDF5
 Author: Moberg Analytics
-Author-email: dick@moberganalytics.com
+Author-email: zack.goldblum@moberganalytics.com
 License: MIT
 Description: # Moberg Analytics HDF5 Functions
         
