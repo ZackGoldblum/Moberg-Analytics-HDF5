@@ -3,6 +3,8 @@ import numpy as np
 import pandas as pd
 import ntpath
 import hdf5_exceptions
+import os
+import json
 
 
 class HDF5Helper:
@@ -291,10 +293,26 @@ class HDF5Content(HDF5Helper):
     def __init__(self, hdf5_filepath):
         super()
         hdf5file = h5py.File(hdf5_filepath, "r")
-        self.hdf5file = hdf5file  
+        # Parent path contains up to directory containing the hdf5 patient file
+        self.parent_path = hdf5_filepath[:-39]
+        self.child_path = hdf5_filepath[-39:-3]
+        self.json_file_path = self.parent_path+ self.child_path+'.json'
+        self.hdf5file = hdf5file
+        self.patient_file_dict = {}
+        file_exists = os.path.isfile(self.json_file_path)
+        if(file_exists):
+            with open(self.json_file_path) as json_file:
+                self.patient_file_dict = json.load(json_file)
         self.all_group_names_dict = self.get_all_group_names_dict()
         self.all_dataset_names_dict = self.get_all_dataset_names_dict()
-        self.all_dataset_paths_dict = self.get_all_dataset_paths_dict()  
+        self.all_dataset_paths_dict = self.get_all_dataset_paths_dict()
+        if not file_exists:
+            json_file = json.dumps(self.patient_file_dict)
+            f = open(self.json_file_path,"w")
+            f.write(json_file)
+            f.close()
+
+
 
 
     # ----------Group Functions----------
@@ -318,9 +336,12 @@ class HDF5Content(HDF5Helper):
         def visit_group(path):
             if isinstance(self.hdf5file[path], h5py._hl.group.Group):  # if group
                 all_group_paths_list.append(path)  # add group to list
-
-        self.hdf5file.visit(visit_group)  # visit all objects in the HDF5 file
-
+        
+        if self.patient_file_dict.get('all_group_paths_list'):
+            all_group_paths_list = self.patient_file_dict.get('all_group_paths_list')
+        else:
+            self.hdf5file.visit(visit_group)  # visit all objects in the HDF5 file
+            self.patient_file_dict['all_group_paths_list'] = all_group_paths_list
         return all_group_paths_list
 
     def get_all_group_objs(self):
@@ -360,9 +381,12 @@ class HDF5Content(HDF5Helper):
         def visit_group(path):
             if isinstance(self.hdf5file[path], h5py._hl.group.Group):  # if group
                 all_group_names_list.append(path.split("/")[-1])  # add group name to list
-
-        self.hdf5file.visit(visit_group) # visit all objects in the HDF5 file
-        all_group_names_list.insert(0, "/")  # add Root Group to start of list
+        if self.patient_file_dict.get('all_group_names_list'):
+            all_group_names_list = self.patient_file_dict.get('all_group_names_list')
+        else:
+            self.hdf5file.visit(visit_group)  # visit all objects in the HDF5 file
+            all_group_names_list.insert(0, "/")  # add Root Group to start of list
+            self.patient_file_dict['all_group_names_list'] = all_group_names_list
 
         return all_group_names_list
 
@@ -505,8 +529,11 @@ class HDF5Content(HDF5Helper):
         def visit_dataset(path):
             if isinstance(self.hdf5file[path], h5py._hl.dataset.Dataset):  # if dataset
                 all_dataset_paths_list.append(path)  # add dataset path to list
-
-        self.hdf5file.visit(visit_dataset)  # visit all objects in the HDF5 file
+        if self.patient_file_dict.get('all_dataset_paths_list'):
+            all_dataset_paths_list = self.patient_file_dict.get('all_dataset_paths_list')
+        else:
+            self.hdf5file.visit(visit_dataset)  # visit all objects in the HDF5 file
+            self.patient_file_dict['all_dataset_paths_list'] = all_dataset_paths_list
 
         return all_dataset_paths_list
 
@@ -549,7 +576,11 @@ class HDF5Content(HDF5Helper):
             if isinstance(self.hdf5file[path], h5py._hl.dataset.Dataset):  # if dataset
                 all_dataset_names_list.append(path.split("/")[-1])  # add dataset name to list
 
-        self.hdf5file.visit(visit_dataset)  # visit all objects in the HDF5 file
+        if self.patient_file_dict.get('all_dataset_names_list'):
+            all_dataset_names_list = self.patient_file_dict.get('all_dataset_names_list')
+        else:
+            self.hdf5file.visit(visit_dataset)  # visit all objects in the HDF5 file
+            self.patient_file_dict['all_dataset_names_list'] = all_dataset_names_list
 
         return all_dataset_names_list
 
