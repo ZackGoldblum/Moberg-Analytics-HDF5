@@ -1061,6 +1061,45 @@ class HDF5Components(HDF5Content):
         except hdf5_exceptions.PathError as e:
             print(e)
 
+    def get_all_subgroup_dataset_names(self, group_name):
+        """
+        DESCRIPTION
+        -----------
+        Returns a list of all dataset names from the subgroups within the "group_name" group.
+        This is a list of only dataset names within the subgroups, it does not include dataset names in the "group_name" group itself.
+
+        PARAMETERS
+        ----------
+        group_name: str
+            name of the group that contains the subgroups
+            
+        RETURNS
+        -------
+        subgroup_dataset_names: list
+            list of the dataset names within the subgroups 
+        """
+
+        try:
+            valid_group_name = self.check_group_name(group_names_list=self.get_all_group_names(), group_name=group_name)
+            if valid_group_name:
+                subgroup_dict = self.get_group_dict(group_name=group_name)["subgroup_dict"]
+                subgroup_names_list = list(subgroup_dict.keys())  # list of subgroup names
+
+                if not subgroup_names_list:  # if there are no subgroups within the group
+                    print('There are no subgroups within this group.')
+
+                subgroup_dataset_names = []
+
+                for subgroup_name in subgroup_names_list:  # for each subgroup name
+                    dataset_dict = subgroup_dict[subgroup_name]["datasets"]
+                    dataset_names_list = list(dataset_dict.keys())  # list of dataset names in the subgroup_name subgroup
+                    subgroup_dataset_names.extend(dataset_names_list)  # add list of dataset names to the list
+
+                return subgroup_dataset_names
+
+        except hdf5_exceptions.GroupNameError as e:
+            print(e)
+
     def get_parent_group_obj(self, group_name=None, dataset_name=None, dataset_path=None):
         """
         DESCRIPTION
