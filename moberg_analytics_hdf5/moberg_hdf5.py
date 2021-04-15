@@ -1541,22 +1541,42 @@ class HDF5Components(HDF5Content):
 
         try:
             if dataset_name:  # if dataset_name passed in
-                valid_dataset_name = self.check_dataset_name(dataset_names_list=self.get_all_dataset_names(), dataset_name=dataset_name)
-                if valid_dataset_name:
-                    dataset_path = self.get_path(dataset_name=dataset_name)
-                    dataset_obj = self.get_dataset_obj(dataset_path=dataset_path)
-                    if matrix_type == "pandas":
-                        column_names_list = self.get_column_names(dataset_path=dataset_path)  # list of dataset column names
-                        if column_names_list:  # if there are column names
-                            dataset_values = pd.DataFrame(data=dataset_obj[:], columns=column_names_list)  # Pandas DataFrame of dataset values
-                        else:  # if there are no column names
-                            dataset_values = pd.DataFrame(data=dataset_obj[:])  # Pandas DataFrame of dataset values
-                        return dataset_values
-                    elif matrix_type == "numpy":
-                        dataset_values = np.array(dataset_obj)  # NumPy Array of dataset values
-                        return dataset_values
-                    else:
-                        raise hdf5_exceptions.MatrixTypeError(matrix_type=matrix_type)
+                if isinstance(dataset_name, list):  # if dataset_name is a list of dataset names
+                    dataset_values_dict = {}
+                    for dataset_name_i in dataset_name:
+                        valid_dataset_name = self.check_dataset_name(dataset_names_list=self.get_all_dataset_names(), dataset_name=dataset_name_i)
+                        if valid_dataset_name:
+                            dataset_path = self.get_path(dataset_name=dataset_name_i)
+                            dataset_obj = self.get_dataset_obj(dataset_path=dataset_path)
+                            if matrix_type == "pandas":
+                                column_names_list = self.get_column_names(dataset_path=dataset_path)  # list of dataset column names
+                                if column_names_list:  # if there are column names
+                                    dataset_values = pd.DataFrame(data=dataset_obj[:], columns=column_names_list)  # Pandas DataFrame of dataset values
+                                else:  # if there are no column names
+                                    dataset_values = pd.DataFrame(data=dataset_obj[:])  # Pandas DataFrame of dataset values
+                            elif matrix_type == "numpy":
+                                dataset_values = np.array(dataset_obj)  # NumPy Array of dataset values
+                            else:
+                                raise hdf5_exceptions.MatrixTypeError(matrix_type=matrix_type)
+                            dataset_values_dict.update({dataset_name_i: dataset_values})
+                    return dataset_values_dict
+                elif isinstance(dataset_name, str):  # if dataset_name is a dataset name string
+                    valid_dataset_name = self.check_dataset_name(dataset_names_list=self.get_all_dataset_names(), dataset_name=dataset_name)
+                    if valid_dataset_name:
+                        dataset_path = self.get_path(dataset_name=dataset_name)
+                        dataset_obj = self.get_dataset_obj(dataset_path=dataset_path)
+                        if matrix_type == "pandas":
+                            column_names_list = self.get_column_names(dataset_path=dataset_path)  # list of dataset column names
+                            if column_names_list:  # if there are column names
+                                dataset_values = pd.DataFrame(data=dataset_obj[:], columns=column_names_list)  # Pandas DataFrame of dataset values
+                            else:  # if there are no column names
+                                dataset_values = pd.DataFrame(data=dataset_obj[:])  # Pandas DataFrame of dataset values
+                            return dataset_values
+                        elif matrix_type == "numpy":
+                            dataset_values = np.array(dataset_obj)  # NumPy Array of dataset values
+                            return dataset_values
+                        else:
+                            raise hdf5_exceptions.MatrixTypeError(matrix_type=matrix_type)
             elif dataset_path:  # if dataset_path passed in
                 valid_dataset_path = self.check_path(path_list=self.get_all_dataset_paths(), path_to_check=dataset_path)
                 if valid_dataset_path:
