@@ -23,7 +23,6 @@ class HDF5Helper:
         -----------
         Returns True if "group_name" is a group name in the HDF5 file. 
         Otherwise returns False and raises a GroupNameError.
-
         PARAMETERS
         ----------
         group_names_list: list
@@ -79,7 +78,6 @@ class HDF5Helper:
         -----------
         Returns True if "dataset_name" is a dataset name in the HDF5 file. 
         Otherwise returns False and raises a DatasetNameError.
-
         PARAMETERS
         ----------
         dataset_names_list: list
@@ -107,7 +105,6 @@ class HDF5Helper:
         DESCRIPTION
         -----------
         Returns True if "dataset_name" is a duplicate dataset in the HDF5 file. Otherwise returns False.
-
         PARAMETERS
         ----------
         dataset_name: str
@@ -134,7 +131,6 @@ class HDF5Helper:
         Prompts the user to choose a dataset path to explicitly select a dataset when
         a duplicate "dataset_name" is passed.
         Returns the HDF5 file path of the selected dataset. 
-
         PARAMETERS
         ----------
         dataset_name: str
@@ -162,7 +158,6 @@ class HDF5Helper:
         DESCRIPTION
         -----------
         Returns a zip object of the dataset_path_list, dataset_name_list, and dataset_list.
-
         PARAMETERS
         ----------
         none
@@ -213,14 +208,12 @@ class HDF5Helper:
         DESCRIPTION
         -----------
         Raises an ArgumentError if zero or more than req_num_args number of arguments are passed to a function.
-
         PARAMETERS
         ----------
         arg_list: list
             list of arguments passed to a function
         req_num_args: int
             number of required arguments
-
         RETURNS
         -------
         none
@@ -239,7 +232,6 @@ class HDF5Helper:
         -----------
         Returns True if "path_to_check" is a path in the HDF5 file. 
         Otherwise returns False and raises a PathError.
-
         PARAMETERS
         ----------
         path_list: list
@@ -720,14 +712,12 @@ class HDF5Content(HDF5Helper):
         DESCRIPTION
         -----------
         Returns the HDF5 file path to a group or dataset.
-
         PARAMETERS
         ----------
         group_name: str
             group name to get the path to
         dataset_name: str
             dataset name to get the path to
-
         RETURNS
         -------
         hdf5_path: str
@@ -766,7 +756,6 @@ class HDF5Content(HDF5Helper):
         Returns a dictionary of metadata attributes.
             Key - attribute name
             Value - attribute value
-
         PARAMETERS
         ----------
         group_name: str
@@ -840,7 +829,6 @@ class HDF5Content(HDF5Helper):
         DESCRIPTION
         -----------
         Returns the group or dataset name from the HDF5 file path.
-
         PARAMETERS
         ----------
         hdf5_path: str
@@ -862,7 +850,6 @@ class HDF5Content(HDF5Helper):
         DESCRIPTION
         -----------
         Parses an HDF5 group or dataset path and creates a list of the path components.
-
         PARAMETERS
         ----------
         hdf5_path: str
@@ -1105,7 +1092,6 @@ class HDF5Components(HDF5Content):
         DESCRIPTION
         -----------
         Returns the parent group class object of the dataset or group.
-
         PARAMETERS
         ----------
         group_name: str
@@ -1116,7 +1102,6 @@ class HDF5Components(HDF5Content):
         -or-
         dataset_path: str
             path of the dataset to get the parent group of
-
         RETURNS
         -------
         parent_group_obj: HDF5 group class object
@@ -1164,7 +1149,6 @@ class HDF5Components(HDF5Content):
         DESCRIPTION
         -----------
         Returns the path of the parent group of the dataset or group.
-
         PARAMETERS
         ----------
         group_name: str
@@ -1175,7 +1159,6 @@ class HDF5Components(HDF5Content):
         -or-
         dataset_path: str
             path of the dataset to get the parent group of
-
         RETURNS
         -------
         parent_group_path: str
@@ -1223,7 +1206,6 @@ class HDF5Components(HDF5Content):
         DESCRIPTION
         -----------
         Returns the name of the parent group of the dataset or group.
-
         PARAMETERS
         ----------
         group_name: str
@@ -1234,7 +1216,6 @@ class HDF5Components(HDF5Content):
         -or-
         dataset_path: str
             path of the dataset to get the parent group of
-
         RETURNS
         -------
         parent_group_name: str
@@ -1357,7 +1338,6 @@ class HDF5Components(HDF5Content):
         Returns a dictionary of the dataset info.
             Key - info name
             Value - info value
-
         PARAMETERS
         ----------
         dataset_name: str
@@ -1460,7 +1440,6 @@ class HDF5Components(HDF5Content):
         Returns a dictionary of the dataset info and values.
             Key - item name
             Value - item value
-
         PARAMETERS
         ----------
         dataset_name: str
@@ -1580,42 +1559,22 @@ class HDF5Components(HDF5Content):
 
         try:
             if dataset_name:  # if dataset_name passed in
-                if isinstance(dataset_name, list):  # if dataset_name is a list of dataset names
-                    dataset_values_dict = {}
-                    for dataset_name_i in dataset_name:
-                        valid_dataset_name = self.check_dataset_name(dataset_names_list=self.get_all_dataset_names(), dataset_name=dataset_name_i)
-                        if valid_dataset_name:
-                            dataset_path = self.get_path(dataset_name=dataset_name_i)
-                            dataset_obj = self.get_dataset_obj(dataset_path=dataset_path)
-                            if matrix_type == "pandas":
-                                column_names_list = self.get_column_names(dataset_path=dataset_path)  # list of dataset column names
-                                if column_names_list:  # if there are column names
-                                    dataset_values = pd.DataFrame(data=dataset_obj[:], columns=column_names_list)  # Pandas DataFrame of dataset values
-                                else:  # if there are no column names
-                                    dataset_values = pd.DataFrame(data=dataset_obj[:])  # Pandas DataFrame of dataset values
-                            elif matrix_type == "numpy":
-                                dataset_values = np.array(dataset_obj)  # NumPy Array of dataset values
-                            else:
-                                raise hdf5_exceptions.MatrixTypeError(matrix_type=matrix_type)
-                            dataset_values_dict.update({dataset_name_i: dataset_values})
-                    return dataset_values_dict
-                elif isinstance(dataset_name, str):  # if dataset_name is a dataset name string
-                    valid_dataset_name = self.check_dataset_name(dataset_names_list=self.get_all_dataset_names(), dataset_name=dataset_name)
-                    if valid_dataset_name:
-                        dataset_path = self.get_path(dataset_name=dataset_name)
-                        dataset_obj = self.get_dataset_obj(dataset_path=dataset_path)
-                        if matrix_type == "pandas":
-                            column_names_list = self.get_column_names(dataset_path=dataset_path)  # list of dataset column names
-                            if column_names_list:  # if there are column names
-                                dataset_values = pd.DataFrame(data=dataset_obj[:], columns=column_names_list)  # Pandas DataFrame of dataset values
-                            else:  # if there are no column names
-                                dataset_values = pd.DataFrame(data=dataset_obj[:])  # Pandas DataFrame of dataset values
-                            return dataset_values
-                        elif matrix_type == "numpy":
-                            dataset_values = np.array(dataset_obj)  # NumPy Array of dataset values
-                            return dataset_values
-                        else:
-                            raise hdf5_exceptions.MatrixTypeError(matrix_type=matrix_type)
+                valid_dataset_name = self.check_dataset_name(dataset_names_list=self.get_all_dataset_names(), dataset_name=dataset_name)
+                if valid_dataset_name:
+                    dataset_path = self.get_path(dataset_name=dataset_name)
+                    dataset_obj = self.get_dataset_obj(dataset_path=dataset_path)
+                    if matrix_type == "pandas":
+                        column_names_list = self.get_column_names(dataset_path=dataset_path)  # list of dataset column names
+                        if column_names_list:  # if there are column names
+                            dataset_values = pd.DataFrame(data=dataset_obj[:], columns=column_names_list)  # Pandas DataFrame of dataset values
+                        else:  # if there are no column names
+                            dataset_values = pd.DataFrame(data=dataset_obj[:])  # Pandas DataFrame of dataset values
+                        return dataset_values
+                    elif matrix_type == "numpy":
+                        dataset_values = np.array(dataset_obj)  # NumPy Array of dataset values
+                        return dataset_values
+                    else:
+                        raise hdf5_exceptions.MatrixTypeError(matrix_type=matrix_type)
             elif dataset_path:  # if dataset_path passed in
                 valid_dataset_path = self.check_path(path_list=self.get_all_dataset_paths(), path_to_check=dataset_path)
                 if valid_dataset_path:
@@ -1639,4 +1598,3 @@ class HDF5Components(HDF5Content):
             print(e2)
         except hdf5_exceptions.MatrixTypeError as e3:
             print(e3)
-
