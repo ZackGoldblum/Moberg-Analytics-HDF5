@@ -1,2 +1,5 @@
 moberg_analytics_hdf5/__pycache__
-*.egg_info
+*.egg_info*
+build/
+dist/
+Moberg_Analytics_HDF5.egg-info/
