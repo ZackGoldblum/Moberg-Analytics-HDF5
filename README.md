@@ -37,6 +37,13 @@ groups, datasets, dataset values, NumPy/Pandas matrices of dataset values, metad
 	
 4 - Use the functions as detailed in the documentation below.
 
+## Json performance comparison
+For a 20 Gb patient file
+1. Without json: 254.868 seconds
+2. With json: 0.0250 seconds
+
+Need more detailed stats later but removing 99.99% of wasted computation for this file
+
 ## Documentation 
 
 The Moberg-Analytics-HDF5 documentation is located [here](https://moberg-analytics-inc.github.io/Moberg-Analytics-HDF5-Documentation/).
